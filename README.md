@@ -5,10 +5,11 @@ Swabox is a modern terminal application enhanced with AI capabilities, providing
 ## Features
 
 - Basic terminal functionality with command history
-- Syntax highlighting and command completion
+- Syntax highlighting and command completion using Rich and prompt_toolkit
 - Built-in commands for system information and utilities
-- (Coming soon) AI-assisted command suggestions
-- (Coming soon) Natural language command processing
+- Plugin system for extending functionality
+- Shell command execution via "!" prefix
+- AI-assisted command suggestions and natural language processing (coming soon)
 
 ## Installation
 
@@ -39,65 +40,74 @@ python swabox.py
 - `time` - Display the current time
 - `info` - Display information about Swabox
 - `system` - Display system information
+- `![command]` - Execute a shell command
 
 ## Project Structure
 
 ```
 swabox/
-├── requirements.txt   # Python dependencies
-├── swabox.py         # Main entry point
-├── terminal/         # Terminal UI components
-├── core/             # Core application logic
+├── README.md            # Project documentation
+├── requirements.txt     # Python dependencies
+├── swabox.py            # Main entry point
+├── config.json          # Application configuration
+├── terminal/            # Terminal UI components
+│   ├── __init__.py
+│   ├── ui.py            # UI rendering using Rich
+│   └── input_handler.py # Input handling with prompt_toolkit
+├── core/                # Core application logic
+│   ├── __init__.py
+│   ├── app.py           # Main application logic
+│   ├── commands.py      # Command execution and plugin handling
+│   └── ai.py            # AI integration (in development)
+├── plugins/             # Plugin system
+│   ├── __init__.py
+│   └── weather.py       # Example weather plugin
+├── services/            # Service components
+│   ├── ai-service/      # JavaScript AI integration
+│   ├── command-engine/  # C# command processing
+│   └── plugin-system/   # Java plugin system
+├── docker-compose.yml   # Docker Compose configuration
+└── utils/               # Utility scripts and tools
+    ├── dev/             # Development utilities
+    └── setup/           # Setup scripts
 ```
+
+## Plugin System
+
+Swabox features a plugin system that allows for easy extension of functionality:
+
+```python
+# Example of loading plugins
+plugins = load_plugins(plugin_folder="plugins")
+
+# Example of executing a plugin command
+execute_command("weather", plugins)
+```
+
+Plugins are loaded dynamically from the `plugins` directory. Each plugin should be a Python module with a `run()` function.
+
+## Shell Command Execution
+
+You can execute shell commands directly from Swabox by prefixing them with `!`:
+
+```
+Enter command: !ls -la
+```
+
+This will execute the `ls -la` command in your system shell.
+
+## Theme and Styling
+
+Swabox uses the Rich library for terminal styling with a custom theme:
+
+- `info`: dim cyan - for informational messages
+- `warning`: magenta - for warning messages
+- `error`: bold red - for error messages
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.# terminal/ui.py
-from rich.console import Console
-from rich.theme import Theme
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-# Define a custom theme
-custom_theme = Theme({
-    "info": "dim cyan",
-    "warning": "magenta",
-    "error": "bold red"
-})
+## License
 
-console = Console(theme=custom_theme)
-
-def display_message(message, style="info"):
-    console.print(message, style=style)# terminal/input_handler.py
-    from prompt_toolkit import PromptSession
-    from prompt_toolkit.completion import PathCompleter
-    
-    session = PromptSession(completer=PathCompleter())
-    
-    def get_user_input():
-        return session.prompt("Enter command: ")# core/commands.py
-        import importlib
-        import os
-        
-        def load_plugins(plugin_folder="plugins"):
-            plugins = {}
-            for filename in os.listdir(plugin_folder):
-                if filename.endswith(".py"):
-                    module_name = filename[:-3]
-                    module = importlib.import_module(f"{plugin_folder}.{module_name}")
-                    plugins[module_name] = module
-            return plugins
-        
-        def execute_command(command, plugins):
-            if command in plugins:
-                plugins[command].run()
-            else:
-                print(f"Command {command} not found.")# core/commands.py
-                import subprocess
-                
-                def execute_command(command, plugins):
-                    if command.startswith("!"):
-                        shell_command = command[1:]
-                        subprocess.run(shell_command, shell=True)
-                    elif command in plugins:
-                        plugins[command].run()
-                    else:
-                        print(f"Command {command} not found.")
+[MIT License](LICENSE)

@@ -1,0 +1,11 @@
+{
+    "ai_enabled": false,
+    "ai_config": {
+      "provider": "anthropic",
+      "model": "claude-3-haiku-20240307",
+      "api_key": null
+    },
+    "history_size": 100,
+    "prompt_style": "default",
+    "plugins_enabled": true
+  }

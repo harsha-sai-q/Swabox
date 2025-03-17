@@ -1,0 +1,12 @@
+# Terminal UI
+rich==13.7.0
+prompt_toolkit==3.0.43
+
+# HTTP requests for API communication
+requests==2.31.0
+
+# Command and plugin management
+importlib_metadata==6.8.0
+
+# Environment variable management
+python-dotenv==1.0.0
